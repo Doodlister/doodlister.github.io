@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Algorithm,">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="回溯法回溯法可以系统性的搜索一个问题的所有解，或者任意一个解。它在问题的解空间中按照深度优先的策略，从根节点出发搜索解空间树。算法搜索至解空间的任意一个结点的时候，先判断该节点是否包含问题的解。如果肯定不包含，则跳过对该节点为根节点的子树的搜索，逐层向其祖先节点回溯。否则，进入子树，继续按照深度优先搜索的策略搜索。回溯法求问题的所有解的时候，要回溯到根，且根节点的所有子树都已被搜索遍才结束。回溯法">
+<meta name="keywords" content="Algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Backtracking">
+<meta property="og:url" content="http://yoursite.com/2017/04/26/Backtracking/index.html">
+<meta property="og:site_name" content="Another Doodlister&#39;s Life">
+<meta property="og:description" content="回溯法回溯法可以系统性的搜索一个问题的所有解，或者任意一个解。它在问题的解空间中按照深度优先的策略，从根节点出发搜索解空间树。算法搜索至解空间的任意一个结点的时候，先判断该节点是否包含问题的解。如果肯定不包含，则跳过对该节点为根节点的子树的搜索，逐层向其祖先节点回溯。否则，进入子树，继续按照深度优先搜索的策略搜索。回溯法求问题的所有解的时候，要回溯到根，且根节点的所有子树都已被搜索遍才结束。回溯法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-12T10:18:39.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Backtracking">
+<meta name="twitter:description" content="回溯法回溯法可以系统性的搜索一个问题的所有解，或者任意一个解。它在问题的解空间中按照深度优先的策略，从根节点出发搜索解空间树。算法搜索至解空间的任意一个结点的时候，先判断该节点是否包含问题的解。如果肯定不包含，则跳过对该节点为根节点的子树的搜索，逐层向其祖先节点回溯。否则，进入子树，继续按照深度优先搜索的策略搜索。回溯法求问题的所有解的时候，要回溯到根，且根节点的所有子树都已被搜索遍才结束。回溯法">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/26/Backtracking/">
+
+
+
+
+
+  <title>Backtracking | Another Doodlister's Life</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c01ad58b493de891f9e4399cdd84491f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Another Doodlister's Life</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">那个涂鸦者的传说</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/26/Backtracking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Doodlister">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Another Doodlister's Life">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Backtracking</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T21:13:26+08:00">
+                2017-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a><a href="#回溯法" title="回溯法"></a><center>回溯法</center></h1><p>回溯法可以系统性的搜索一个问题的所有解，或者任意一个解。它在问题的解空间中按照<strong>深度优先</strong>的策略，从根节点出发搜索解空间树。算法搜索至解空间的任意一个结点的时候，先判断该节点是否包含问题的解。<br>如果肯定不包含，则跳过对该节点为根节点的子树的搜索，逐层向其祖先节点回溯。否则，进入子树，继续按照深度优先搜索的策略搜索。回溯法求问题的所有解的时候，要回溯到根，且根节点的所有子树都已被搜索遍才结束。回溯法求问题的一个解的时候，只要搜索到问题的一个解就可以结束。<br> 这种以深度优先舱室系统搜索问题解的算法称为回溯法，他只适用于解组合数较大的问题。<br><a id="more"></a></p>
+<h1 id="回溯法的框架"><a href="#回溯法的框架" class="headerlink" title="回溯法的框架"></a><a href="#回溯法的框架" title="回溯法的框架"></a>回溯法的框架</h1><h2 id="问题的解空间"><a href="#问题的解空间" class="headerlink" title="问题的解空间"></a><a href="#问题的解空间" title="问题的解空间"></a>问题的解空间</h2><p>用回溯法解问题时，应该明确的定义出问题的解空间。问题的解空间应至少包含问题的一个（最优）解。例如，对有n种可选问题的0-1背包问题，其解空间由长度为n的0-1向量组成。该解空间包含对变量的所有可能0-1赋值。当n=3的时候，其解空间有8种。<br>然后我们思考一下，应该用什么样的数据结构来组织这个解空间呢？<br>前面我们说到，对解空间的遍历方式为深度优先搜索，显然，应该用树或者图的形式来组织解空间。</p>
+<h2 id="回溯法的基本思想"><a href="#回溯法的基本思想" class="headerlink" title="回溯法的基本思想"></a><a href="#回溯法的基本思想" title="回溯法的基本思想"></a>回溯法的基本思想</h2><p>回溯法从根节点出发，以深度优先的方式搜索整个解空间。这个开始节点成为<strong>活结点</strong>，同时也称为当前扩展节点。在当前扩展节点处，搜索向纵深方向移至一个新节点。这个新节点就成为了新的活结点，并成为了当前扩展结点。如果在当前扩展节点处不能在向纵深方向移动，则当前扩展节点就成为<strong>死节点</strong>。此时应该往回移动（回溯）至最近的一个活结点处，并使这个活结点成为当前扩展节点。回溯法的这种工作模式递归的在解空间中搜索，直到找到要求的解或者解空间中已无活结点为止。</p>
+<h3 id="剪枝函数"><a href="#剪枝函数" class="headerlink" title="剪枝函数"></a><a href="#剪枝函数" title="剪枝函数"></a>剪枝函数</h3><p>剪枝函数是一种避免无效搜索的策略，用于提高回溯的效率<br>一、可利用约束函数在扩展结点处剪去不满足约束的子树。<br>二、可利用界限函数减去得不到最优解的子树。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a href="#总结" title="总结"></a>总结</h3><ul>
+<li>针对所给问题，定义问题的解空间；</li>
+<li>确定易于搜索的解空间数据结构；</li>
+<li>以深度优先搜索的方式搜索解空间，并在搜索过程中用剪枝函数避免无效搜索</li>
+</ul>
+<h2 id="两种回溯方式"><a href="#两种回溯方式" class="headerlink" title="两种回溯方式"></a><a href="#两种回溯方式" title="两种回溯方式"></a>两种回溯方式</h2><h3 id="递归回溯"><a href="#递归回溯" class="headerlink" title="递归回溯"></a><a href="#递归回溯" title="递归回溯"></a>递归回溯</h3><p>代码描述如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">void backTrack(int t)&#123;</div><div class="line">    if(t&gt;n)</div><div class="line">        outPut(x);</div><div class="line">    else</div><div class="line">        for(int i=f(n,t);i&lt;=g(n,t);i++)</div><div class="line">            x[t]=h(i);</div><div class="line">            if(Constraint(t)&amp;&amp;Bound(t))</div><div class="line">                backTrack(t+1);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+<p>其中，形式参数t表示递归的深度，即当前扩展节点在解空间树中的深度。n来控制递归的深度。<br>当t&gt;n时，算法已经搜索到叶子结点。此时，有outPut(x)记录或者输出得到的可行解x。算法backTrack中的for循环中f(n,t)和g(n,t)分别表示在当前扩展结点处未搜索过的子树的起始编号和终止编号。h(i)表示在当前扩展节点处x[t]的第i个可选值。Constraint(t)和Bound(t)表示在当前扩展结点处的约束函数和界限函数。Constraint(t)的返回值为true时，在当前扩展节点处x[1:t]的取值满足问题的约束条件，否则不满足问题的约束条件，可剪去相应的子树。<br>Bound(t)返回值为true的时候，在当前扩展节点处x[1:t]的值未使目标函数越界，还需进一步搜索，否则当扩展节点出x[1:t]的取值是目标函数越界，可剪去相应的子树。执行了算法的for循环后，已搜索遍历了当前扩展节点的所有未搜索子树。backTrack(t)执行完毕，返回t-1层继续执行。对还没有测试过的x[t-1]的值继续搜索。当t=1时，如果已经测试完x[1]所有可能的值，外层调用就全部结束了。显然这一搜索过程以深度优先的方式进行。调用一次backTrack(1)即可完成整个回溯过程。</p>
+<h3 id="迭代回溯"><a href="#迭代回溯" class="headerlink" title="迭代回溯"></a><a href="#迭代回溯" title="迭代回溯"></a>迭代回溯</h3><p>代码描述如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">void iterativeBackTrack(void)&#123;</div><div class="line">    int t=1;</div><div class="line">    while(t&gt;0)&#123;</div><div class="line">        if(f(n,t)&lt;=g(n,t))</div><div class="line">            for(int i=f(n,t);i&lt;=g(n,t);i++)&#123;</div><div class="line">                x[t]=h(i);</div><div class="line">                if(Constraint(t)&amp;&amp;Bound(t))&#123;</div><div class="line">                    if(Solution(t)) </div><div class="line">                        outPut(x);</div><div class="line">                    else</div><div class="line">                        t++;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        else</div><div class="line">            t–;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+<p>上述迭代回溯算法中，用Solution(t)判断当前扩展节点处是否已经得到问题的可行解，它返回值为true的时候，在扩展节点出x[1:t]是问题的可行解。此时outPut(x)记录或输出问题的可行解。它返回值为false的时候在当前扩展节点处x[1:t]只是问题的部分解。还需向纵深方向继续搜索。算法中f(n,t)和g(n,t)分别表示在当前扩展结点处未搜索过的子树的起始编号和终止编号。h(i)表示在当前扩展节点处x[t]的第i个可选值。Constraint(t)和Bound(t)表示在当前扩展结点处的约束函数和界限函数。Constraint(t)的返回值为true时，在当前扩展节点处x[1:t]的取值满足问题的约束条件，否则不满足问题的约束条件，可剪去相应的子树。<br>Bound(t)返回值为true的时候，在当前扩展节点处x[1:t]的值未使目标函数越界，还需进一步搜索，否则当扩展节点出x[1:t]的取值是目标函数越界，可剪去相应的子树。算法的while循环结束后，完成整个回溯搜索过程。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/19/HeapSort/" rel="next" title="HeapSort">
+                <i class="fa fa-chevron-left"></i> HeapSort
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/25/IndexPriorityQueue/" rel="prev" title="IndexPriorityQueue">
+                IndexPriorityQueue <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400" alt="Doodlister">
+          <p class="site-author-name" itemprop="name">Doodlister</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/doodlister" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#回溯法"><span class="nav-number">1.</span> <span class="nav-text">回溯法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回溯法的框架"><span class="nav-number">2.</span> <span class="nav-text">回溯法的框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题的解空间"><span class="nav-number">2.1.</span> <span class="nav-text">问题的解空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回溯法的基本思想"><span class="nav-number">2.2.</span> <span class="nav-text">回溯法的基本思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#剪枝函数"><span class="nav-number">2.2.1.</span> <span class="nav-text">剪枝函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.2.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种回溯方式"><span class="nav-number">2.3.</span> <span class="nav-text">两种回溯方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#递归回溯"><span class="nav-number">2.3.1.</span> <span class="nav-text">递归回溯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代回溯"><span class="nav-number">2.3.2.</span> <span class="nav-text">迭代回溯</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doodlister</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="java,反射,泛型,JDK源码,">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="getGenericSuperclassjava.lang.Class public reflect.Type getGenericSuperclass()     Returns the Type representing the direct superclass of the entity (class, interface, primitive type or void) represen">
+<meta name="keywords" content="java,反射,泛型,JDK源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过反射获取泛型参数类型">
+<meta property="og:url" content="http://yoursite.com/2018/01/04/通过反射获取泛型参数类型/index.html">
+<meta property="og:site_name" content="Another Doodlister&#39;s Life">
+<meta property="og:description" content="getGenericSuperclassjava.lang.Class public reflect.Type getGenericSuperclass()     Returns the Type representing the direct superclass of the entity (class, interface, primitive type or void) represen">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-12T10:18:39.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通过反射获取泛型参数类型">
+<meta name="twitter:description" content="getGenericSuperclassjava.lang.Class public reflect.Type getGenericSuperclass()     Returns the Type representing the direct superclass of the entity (class, interface, primitive type or void) represen">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/04/通过反射获取泛型参数类型/">
+
+
+
+
+
+  <title>通过反射获取泛型参数类型 | Another Doodlister's Life</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c01ad58b493de891f9e4399cdd84491f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Another Doodlister's Life</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">那个涂鸦者的传说</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/04/通过反射获取泛型参数类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Doodlister">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Another Doodlister's Life">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">通过反射获取泛型参数类型</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-04T17:44:01+08:00">
+                2018-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="getGenericSuperclass"><a href="#getGenericSuperclass" class="headerlink" title="getGenericSuperclass"></a>getGenericSuperclass</h1><pre><code>java.lang.Class
+public reflect.Type getGenericSuperclass()
+    Returns the Type representing the direct superclass of the entity (class, interface, primitive type or void) represented by this Class.
+    If the superclass is a parameterized type, the Type object returned must accurately reflect the actual type parameters used in the source code. The parameterized type representing the superclass is created if it had not been created before. See the declaration of ParameterizedType for the semantics of the creation process for parameterized types. If this Class represents either the Object class, an interface, a primitive type, or void, then null is returned. If this object represents an array class then the Class object representing the Object class is returned.
+</code></pre><a id="more"></a>
+<pre><code>Returns:
+    the superclass of the class represented by this object
+Throws:
+    reflect.GenericSignatureFormatError - if the generic class signature does not conform to the format specified in The Java™ Virtual Machine Specification
+    TypeNotPresentException - if the generic superclass refers to a non-existent type declaration
+    reflect.MalformedParameterizedTypeException - if the generic superclass refers to a parameterized type that cannot be instantiated for any reason
+Since:
+    1.5
+</code></pre><p>返回代表这个实体的直接父类的类型。返回的类型可以是class、interface、primitive type(原始类型 也就是我们常说的8种基本类型)或者void。<br>如果这个父类是参数化类型的话，返回的Type对象必须准确的反映源代码中用到的参数实际类型。参数化类型代表如果父类之前没有被创建过的话，那么现在它已经被创建了。通过ParameterizedType的源码看我们可以了解到。<br>如果该类表示对象类、接口、原始类型或空，则返回null。如果该对象表示数组类，则返回代表Object类的类对象。</p>
+<p>什么乱七八糟的。。翻译成中文之后依旧是一脸懵逼。。<br>不过从上面我们可以大概知道getGenericSuperclass()这个方法返回一个Type类型的对象。这个Type对象代表的是调用此方法的父类的类型。特别的如果这个父类是泛型类的话，那么返回的类型实际类型为ParameterizedType。<br>那么这个Type和ParameterizedType又分别是什么东西呢？</p>
+<h1 id="Type和ParameterizedType"><a href="#Type和ParameterizedType" class="headerlink" title="Type和ParameterizedType"></a>Type和ParameterizedType</h1><h2 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h2><pre><code>package java.lang.reflect;
+/**
+ * Type is the common superinterface for all types in the Java
+ * programming language. These include raw types, parameterized types,
+ * array types, type variables and primitive types.
+ *
+ * @since 1.5
+ */
+public interface Type {
+    /**
+     * Returns a string describing this type, including information
+     * about any type parameters.
+     *
+     * @implSpec The default implementation calls {@code toString}.
+     *
+     * @return a string describing this type
+     * @since 1.8
+     */
+    default String getTypeName() {
+        return toString();
+    }
+}
+</code></pre><p>Type是所有JAVA中所有类型的共同超类。其中就一个方法getTypeName也就是返回这个类型全限定名。</p>
+<h2 id="ParameterizedType"><a href="#ParameterizedType" class="headerlink" title="ParameterizedType"></a>ParameterizedType</h2><p>而ParameterizedType则是Type的子接口，源码如下</p>
+<pre><code>public interface ParameterizedType extends Type {
+    //1.获得&lt;&gt;中实际类型
+    Type[] getActualTypeArguments();
+    //2.获得&lt;&gt;前面实际类型
+    Type getRawType();
+    //3.如果这个类型是某个类型所属，获得这个所有者类型，否则返回null
+    Type getOwnerType();
+}
+</code></pre><h3 id="getActualTypeArguments"><a href="#getActualTypeArguments" class="headerlink" title="getActualTypeArguments"></a>getActualTypeArguments</h3><p>获得参数化类型中&lt;&gt;里的类型参数的类型，因为可能有多个类型参数，例如Map<k, v>，所以返回的是一个Type[]数组。<br>【注意】无论&lt;&gt;中有几层&lt;&gt;嵌套，这个方法仅仅脱去最外层的&lt;&gt;，之后剩下的内容就作为这个方法的返回值，所以其返回值类型不一定。<br>例如： </k,></p>
+<ol>
+<li>List<arraylist> a1;//这里返回的是，ArrayList，Class类型 </arraylist></li>
+<li>List&lt;ArrayList<string>&gt; a2;//这里返回的是ArrayList<string>，ParameterizedType类型 </string></string></li>
+<li>List<t> a3;//返回的是T，TypeVariable类型 </t></li>
+<li>List&lt;? extends Number&gt; a4; //返回的是WildcardType类型 </li>
+<li>List&lt;ArrayList<string>[]&gt; a5;//GenericArrayType<br>要注意，ArrayList与ArrayList<string>的不同。</string></string></li>
+</ol>
+<h3 id="getRawType"><a href="#getRawType" class="headerlink" title="getRawType"></a>getRawType</h3><p>返回最外层&lt;&gt;前面那个类型，即Map<k ,v>的Map..</k></p>
+<pre><code>Map&lt;Integer, String&gt; maps = new HashMap&lt;&gt;();
+ParameterizedType pType = (ParameterizedType) maps.getClass().getGenericSuperclass();//获得HashMap的父类
+System.out.println(pType.getRawType());//class java.util.AbstractMap
+if(pType.getRawType() instanceof Class){
+         System.out.println(&quot;true&quot;);//true
+}
+</code></pre><p>输出为</p>
+<p>‘’’<br>class java.util.AbstractMap<br>true</p>
+<p>‘’’</p>
+<h3 id="getOwnerType"><a href="#getOwnerType" class="headerlink" title="getOwnerType"></a>getOwnerType</h3><p>获得这个类型的所有者的类型</p>
+<pre><code>public class TestBaseService {
+    public static void main(String[] args) throws NoSuchMethodException {
+        Method method = new TestBaseService().getClass().getMethod(&quot;applyMethod&quot;,Map.Entry.class);
+        Type[] types = method.getGenericParameterTypes();
+        ParameterizedType pType = (ParameterizedType)types[0];
+        //返回所有者类型，打印结果是interface java.util.Map
+        System.out.println(pType.getOwnerType());
+    }
+    public static &lt;T,U&gt; void applyMethod(Map.Entry&lt;T,U&gt; mapEntry){
+    }
+}
+</code></pre><p>输出为<br>interface java.util.Map</p>
+<h1 id="得到泛型类型"><a href="#得到泛型类型" class="headerlink" title="得到泛型类型"></a>得到泛型类型</h1><p>有了以上分析,就可以写出得到泛型类型的代码了。</p>
+<pre><code>package com.doodlister.dao;
+public class Example {
+}
+
+package com.doodlister.dao;
+public class Mapper {
+}
+
+package com.doodlister.dao;
+public class Record {
+}
+
+package com.doodlister.service;
+public interface BaseService&lt;Record,Example&gt;{
+
+}
+
+package com.doodlister.service;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+public  abstract class BaseServiceImpl&lt;Record,Example,Mapper&gt; implements BaseService&lt;Record,Example&gt; {
+    public Class&lt;Record&gt; recordClass;
+    public BaseServiceImpl(){
+        Type genType =  getClass().getGenericSuperclass();
+        if(genType instanceof ParameterizedType){
+            ParameterizedType paraType =(ParameterizedType)genType;
+            Class&lt;Record&gt; recordClass= (Class&lt;Record&gt;) paraType.getActualTypeArguments()[0];
+
+        }
+    }
+}
+
+package com.doodlister.service;
+import com.doodlister.dao.Example;
+import com.doodlister.dao.Mapper;
+import com.doodlister.dao.Record;
+public class UserService extends BaseServiceImpl&lt;Record,Example,Mapper&gt; {
+    public  void testRecordClass(){
+        System.out.println(recordClass.getName());
+    }
+}
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/反射/" rel="tag"># 反射</a>
+          
+            <a href="/tags/泛型/" rel="tag"># 泛型</a>
+          
+            <a href="/tags/JDK源码/" rel="tag"># JDK源码</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/10/深入理解Java虚拟机读书笔记-JVM运行时数据区域/" rel="next" title="Java虚拟机">
+                <i class="fa fa-chevron-left"></i> Java虚拟机
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/11/redis/" rel="prev" title="redis">
+                redis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400" alt="Doodlister">
+          <p class="site-author-name" itemprop="name">Doodlister</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/doodlister" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#getGenericSuperclass"><span class="nav-number">1.</span> <span class="nav-text">getGenericSuperclass</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Type和ParameterizedType"><span class="nav-number">2.</span> <span class="nav-text">Type和ParameterizedType</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Type"><span class="nav-number">2.1.</span> <span class="nav-text">Type</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ParameterizedType"><span class="nav-number">2.2.</span> <span class="nav-text">ParameterizedType</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#getActualTypeArguments"><span class="nav-number">2.2.1.</span> <span class="nav-text">getActualTypeArguments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getRawType"><span class="nav-number">2.2.2.</span> <span class="nav-text">getRawType</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getOwnerType"><span class="nav-number">2.2.3.</span> <span class="nav-text">getOwnerType</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#得到泛型类型"><span class="nav-number">3.</span> <span class="nav-text">得到泛型类型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doodlister</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

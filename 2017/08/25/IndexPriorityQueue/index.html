@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Algorithm,Data Structuer,Heap,Queue,">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="优先队列与索引优先队列优先队列本质上是利用完全二叉堆的结构实现的以1\log_2 n 时间复杂度来删除最大元素(大顶堆)或添加元素的一种数据结构。而传统的优先队列可以操作的元素只能是最大或最小元素。无法快速的访问任意的元素。索引优先队列的出现正是解决了这一问题。索引优先队列用一个整数(即我们说的索引)和对象进行关联，可以快捷的通过索引访问任意元素，插入元素，删除元素。">
+<meta name="keywords" content="Algorithm,Data Structuer,Heap,Queue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IndexPriorityQueue">
+<meta property="og:url" content="http://yoursite.com/2017/08/25/IndexPriorityQueue/index.html">
+<meta property="og:site_name" content="Another Doodlister&#39;s Life">
+<meta property="og:description" content="优先队列与索引优先队列优先队列本质上是利用完全二叉堆的结构实现的以1\log_2 n 时间复杂度来删除最大元素(大顶堆)或添加元素的一种数据结构。而传统的优先队列可以操作的元素只能是最大或最小元素。无法快速的访问任意的元素。索引优先队列的出现正是解决了这一问题。索引优先队列用一个整数(即我们说的索引)和对象进行关联，可以快捷的通过索引访问任意元素，插入元素，删除元素。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-12T10:18:39.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IndexPriorityQueue">
+<meta name="twitter:description" content="优先队列与索引优先队列优先队列本质上是利用完全二叉堆的结构实现的以1\log_2 n 时间复杂度来删除最大元素(大顶堆)或添加元素的一种数据结构。而传统的优先队列可以操作的元素只能是最大或最小元素。无法快速的访问任意的元素。索引优先队列的出现正是解决了这一问题。索引优先队列用一个整数(即我们说的索引)和对象进行关联，可以快捷的通过索引访问任意元素，插入元素，删除元素。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/25/IndexPriorityQueue/">
+
+
+
+
+
+  <title>IndexPriorityQueue | Another Doodlister's Life</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c01ad58b493de891f9e4399cdd84491f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Another Doodlister's Life</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">那个涂鸦者的传说</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/IndexPriorityQueue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Doodlister">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Another Doodlister's Life">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">IndexPriorityQueue</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T16:15:03+08:00">
+                2017-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="优先队列与索引优先队列"><a href="#优先队列与索引优先队列" class="headerlink" title="优先队列与索引优先队列"></a>优先队列与索引优先队列</h1><p>优先队列本质上是利用完全二叉堆的结构实现的以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\log_2 n</span><br></pre></td></tr></table></figure></p>
+<p>时间复杂度来删除最大元素(大顶堆)或添加元素的一种数据结构。<br>而传统的优先队列可以操作的元素只能是最大或最小元素。无法快速的访问任意的元素。索引优先队列的出现正是解决了这一问题。索引优先队列用一个整数(即我们说的索引)和对象进行关联，可以快捷的通过索引访问任意元素，插入元素，删除元素。<br><a id="more"></a></p>
+<h1 id="索引优先队列的实现原理"><a href="#索引优先队列的实现原理" class="headerlink" title="索引优先队列的实现原理"></a>索引优先队列的实现原理</h1><h2 id="简易版本的索引优先队列"><a href="#简易版本的索引优先队列" class="headerlink" title="简易版本的索引优先队列"></a>简易版本的索引优先队列</h2><p>为了实现快速索引，我们可以创建两个数组即:pq[]和keys[]。<br>其中keys[]是一个索引数组，其中存储的值就是优先队列中元素的值。而它的值对应的索引也就是我们为这个元素指定的索引了。而pq[]就是优先队列了。只不过以前我们的的优先队列存储的都是元素的值，而现在pq[]存储的是元素值对应的索引。我们想要对优先队列进行上浮或下沉操作就需要根据pq[]中元素所对应的索引到keys[]里面去找对应的元素值，然后再进行相应的操作。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>我们现在有7个元素:2,3,7,1,8,5,4 想要存入索引优先队列中<br>假设我们为其分配的索引依次为:1，3，2，8，9，5，7<br>则此时对应的keys[]和pq[]存储的内容分别如下:</p>
+<hr>
+<p><strong>keys[]</strong>:<br>keys | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |<br>—|—|—|—|—|—|—|—|— |— |—<br>value | – | 2 | 7 | 3 | – | 5 | – | 4 | 1 | 8 |</p>
+<p><strong>pq[]</strong>:<br>index | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |<br>—|—|—|—|—|—|—|—|— |</p>
+<h2 id="keys-–-9-2-3-5-7-8-1"><a href="#keys-–-9-2-3-5-7-8-1" class="headerlink" title="keys | – | 9 | 2 | 3 | 5 | 7 | 8 | 1 |"></a>keys | – | 9 | 2 | 3 | 5 | 7 | 8 | 1 |</h2><p>可以看到keys[]存储元素时不一定是连续的。而pq[]一定是连续的且数组长度等于优先队列中元素的个数+1。这也和传统的优先队列是一致的。</p>
+<h3 id="删除最大元素"><a href="#删除最大元素" class="headerlink" title="删除最大元素"></a>删除最大元素</h3><p>现在我们想要在队列中删除最大元素。即索引为pq[1]的元素出列。<br>把pq[7]与索引为pq[1]的值交换。然后N=N-1(N为优先队列中当前元素数量)。<br>然后在对优先队列pq[]进行下沉操作就可以了。此时重新整理后的优先队列为</p>
+<hr>
+<p><strong>keys[]</strong>:<br>keys | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |<br>—|—|—|—|—|—|—|—|— |— |—<br>value | – | 2 | 7 | 3 | – | 5 | – | 4 | 1 | – |</p>
+<p><strong>value[]</strong>:<br>index | 0 | 1 | 2 | 3 | 4 | 5 | 6 |<br>—|—|—|—|—|—|—|—|</p>
+<h2 id="keys-–-2-5-3-1-7-8"><a href="#keys-–-2-5-3-1-7-8" class="headerlink" title="keys | – | 2 | 5 | 3 | 1 | 7 | 8 |"></a>keys | – | 2 | 5 | 3 | 1 | 7 | 8 |</h2><h3 id="插入元素"><a href="#插入元素" class="headerlink" title="插入元素"></a>插入元素</h3><p>索引优先队列相比传统优先队列的优点就是可以随机的在任意位置元素的索引更新元素，插入元素或者删除元素。以插入元素为例。<br>比如我们想在索引为6的位置插入元素9。只需要再插入元素后对pq[]数组进行上浮操作就可以了。而其余元素与索引的关系我们并没有改变。此时pq[]对应的优先队列为:</p>
+<hr>
+<p><strong>keys[]</strong>:<br>keys | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |<br>—|—|—|—|—|—|—|—|— |— |—<br>value | – | 2 | 7 | 3 | – | 5 | 9 | 4 | 1 | – |</p>
+<p><strong>value[]</strong>:<br>index | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 6 |<br>—|—|—|—|—|—|—|—| — |</p>
+<h2 id="keys-–-6-5-2-1-7-8-3"><a href="#keys-–-6-5-2-1-7-8-3" class="headerlink" title="keys | – | 6 | 5 | 2 | 1 | 7 | 8 | 3 |"></a>keys | – | 6 | 5 | 2 | 1 | 7 | 8 | 3 |</h2><h2 id="完整版本的索引优先队列"><a href="#完整版本的索引优先队列" class="headerlink" title="完整版本的索引优先队列"></a>完整版本的索引优先队列</h2><h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>索引优先队列也可以方便的根据索引k删除任意一个元素。<br>比如现在想删除索引为5的元素。以前的优先队列删除一个元素都只是单纯的在头部会删除，删除后我们只需要把尾部的元素拿上去，然后再在头部进行此元素的下沉操作就可以了。而现在不同除了在头部删除元素之外。我们还面另外两种情况</p>
+<ul>
+<li>在尾部删除</li>
+<li>在中间删除</li>
+</ul>
+<p>其中在尾部删除的情况最简单了，它不会破坏原有的二叉堆，所以直接删就可以了。而现在我们要解决的是在中间删除的情况。<br>我们把中间的元素删除，并把尾部的元素拿到中间去。对此元素分别进行上浮和下沉操作。我们知道对优先队列进行这两种操作是需要知道该元素对应优先队列中的位置的，那么我们该如何快速根据元素索引找到其在优先队列中的位置呢？新建一个qp[]来保存 pq[]的逆序。并在上浮和下沉的过程中同时维护它。<br>此时一个完整版本的索引优先队列就大致实现了。</p>
+<h1 id="索引优先队列的代码实现"><a href="#索引优先队列的代码实现" class="headerlink" title="索引优先队列的代码实现"></a>索引优先队列的代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Iterator;</span><br><span class="line">import java.util.NoSuchElementException;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  The &#123;@code IndexMaxPQ&#125; class represents an indexed priority queue of generic keys.</span><br><span class="line"> *  It supports the usual &lt;em&gt;insert&lt;/em&gt; and &lt;em&gt;delete-the-maximum&lt;/em&gt;</span><br><span class="line"> *  operations, along with &lt;em&gt;delete&lt;/em&gt; and &lt;em&gt;change-the-key&lt;/em&gt; </span><br><span class="line"> *  methods. In order to let the client refer to items on the priority queue,</span><br><span class="line"> *  an integer between &#123;@code 0&#125; and &#123;@code maxN - 1&#125;</span><br><span class="line"> *  is associated with each key—the client</span><br><span class="line"> *  uses this integer to specify which key to delete or change.</span><br><span class="line"> *  It also supports methods for peeking at a maximum key,</span><br><span class="line"> *  testing if the priority queue is empty, and iterating through</span><br><span class="line"> *  the keys.</span><br><span class="line"> *  &lt;p&gt;</span><br><span class="line"> *  This implementation uses a binary heap along with an array to associate</span><br><span class="line"> *  keys with integers in the given range.</span><br><span class="line"> *  The &lt;em&gt;insert&lt;/em&gt;, &lt;em&gt;delete-the-maximum&lt;/em&gt;, &lt;em&gt;delete&lt;/em&gt;,</span><br><span class="line"> *  &lt;em&gt;change-key&lt;/em&gt;, &lt;em&gt;decrease-key&lt;/em&gt;, and &lt;em&gt;increase-key&lt;/em&gt;</span><br><span class="line"> *  operations take logarithmic time.</span><br><span class="line"> *  The &lt;em&gt;is-empty&lt;/em&gt;, &lt;em&gt;size&lt;/em&gt;, &lt;em&gt;max-index&lt;/em&gt;, &lt;em&gt;max-key&lt;/em&gt;,</span><br><span class="line"> *  and &lt;em&gt;key-of&lt;/em&gt; operations take constant time.</span><br><span class="line"> *  Construction takes time proportional to the specified capacity.</span><br><span class="line"> *  &lt;p&gt;</span><br><span class="line"> *  For additional documentation, see &lt;a href=&quot;http://algs4.cs.princeton.edu/24pq&quot;&gt;Section 2.4&lt;/a&gt; of</span><br><span class="line"> *  &lt;i&gt;Algorithms, 4th Edition&lt;/i&gt; by Robert Sedgewick and Kevin Wayne.</span><br><span class="line"> *</span><br><span class="line"> *  @author Robert Sedgewick</span><br><span class="line"> *  @author Kevin Wayne</span><br><span class="line"> *</span><br><span class="line"> *  @param &lt;Key&gt; the generic type of key on this priority queue</span><br><span class="line"> */</span><br><span class="line">public class IndexMaxPQ&lt;Key extends Comparable&lt;Key&gt;&gt; implements Iterable&lt;Integer&gt; &#123;</span><br><span class="line">    private int n;           // number of elements on PQ</span><br><span class="line">    private int[] pq;        // binary heap using 1-based indexing</span><br><span class="line">    private int[] qp;        // inverse of pq - qp[pq[i]] = pq[qp[i]] = i</span><br><span class="line">    private Key[] keys;      // keys[i] = priority of i</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Initializes an empty indexed priority queue with indices between &#123;@code 0&#125;</span><br><span class="line">     * and &#123;@code maxN - 1&#125;.</span><br><span class="line">     *</span><br><span class="line">     * @param  maxN the keys on this priority queue are index from &#123;@code 0&#125; to &#123;@code maxN - 1&#125;</span><br><span class="line">     * @throws IllegalArgumentException if &#123;@code maxN &lt; 0&#125;</span><br><span class="line">     */</span><br><span class="line">    public IndexMaxPQ(int maxN) &#123;</span><br><span class="line">        if (maxN &lt; 0) throw new IllegalArgumentException();</span><br><span class="line">        n = 0;</span><br><span class="line">        keys = (Key[]) new Comparable[maxN + 1];    // make this of length maxN??</span><br><span class="line">        pq   = new int[maxN + 1];</span><br><span class="line">        qp   = new int[maxN + 1];                   // make this of length maxN??</span><br><span class="line">        for (int i = 0; i &lt;= maxN; i++)</span><br><span class="line">            qp[i] = -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns true if this priority queue is empty.</span><br><span class="line">     *</span><br><span class="line">     * @return &#123;@code true&#125; if this priority queue is empty;</span><br><span class="line">     *         &#123;@code false&#125; otherwise</span><br><span class="line">     */</span><br><span class="line">    public boolean isEmpty() &#123;</span><br><span class="line">        return n == 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Is &#123;@code i&#125; an index on this priority queue?</span><br><span class="line">     *</span><br><span class="line">     * @param  i an index</span><br><span class="line">     * @return &#123;@code true&#125; if &#123;@code i&#125; is an index on this priority queue;</span><br><span class="line">     *         &#123;@code false&#125; otherwise</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     */</span><br><span class="line">    public boolean contains(int i) &#123;</span><br><span class="line">        return qp[i] != -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns the number of keys on this priority queue.</span><br><span class="line">     *</span><br><span class="line">     * @return the number of keys on this priority queue </span><br><span class="line">     */</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">     * Associate key with index i.</span><br><span class="line">     *</span><br><span class="line">     * @param  i an index</span><br><span class="line">     * @param  key the key to associate with index &#123;@code i&#125;</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @throws IllegalArgumentException if there already is an item</span><br><span class="line">     *         associated with index &#123;@code i&#125;</span><br><span class="line">     */</span><br><span class="line">    public void insert(int i, Key key) &#123;</span><br><span class="line">        if (contains(i)) throw new IllegalArgumentException(&quot;index is already in the priority queue&quot;);</span><br><span class="line">        n++;</span><br><span class="line">        qp[i] = n;</span><br><span class="line">        pq[n] = i;</span><br><span class="line">        keys[i] = key;</span><br><span class="line">        swim(n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns an index associated with a maximum key.</span><br><span class="line">     *</span><br><span class="line">     * @return an index associated with a maximum key</span><br><span class="line">     * @throws NoSuchElementException if this priority queue is empty</span><br><span class="line">     */</span><br><span class="line">    public int maxIndex() &#123;</span><br><span class="line">        if (n == 0) throw new NoSuchElementException(&quot;Priority queue underflow&quot;);</span><br><span class="line">        return pq[1];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns a maximum key.</span><br><span class="line">     *</span><br><span class="line">     * @return a maximum key</span><br><span class="line">     * @throws NoSuchElementException if this priority queue is empty</span><br><span class="line">     */</span><br><span class="line">    public Key maxKey() &#123;</span><br><span class="line">        if (n == 0) throw new NoSuchElementException(&quot;Priority queue underflow&quot;);</span><br><span class="line">        return keys[pq[1]];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Removes a maximum key and returns its associated index.</span><br><span class="line">     *</span><br><span class="line">     * @return an index associated with a maximum key</span><br><span class="line">     * @throws NoSuchElementException if this priority queue is empty</span><br><span class="line">     */</span><br><span class="line">    public int delMax() &#123;</span><br><span class="line">        if (n == 0) throw new NoSuchElementException(&quot;Priority queue underflow&quot;);</span><br><span class="line">        int min = pq[1];</span><br><span class="line">        exch(1, n--);</span><br><span class="line">        sink(1);</span><br><span class="line"></span><br><span class="line">        assert pq[n+1] == min;</span><br><span class="line">        qp[min] = -1;        // delete</span><br><span class="line">        keys[min] = null;    // to help with garbage collection</span><br><span class="line">        pq[n+1] = -1;        // not needed</span><br><span class="line">        return min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns the key associated with index &#123;@code i&#125;.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to return</span><br><span class="line">     * @return the key associated with index &#123;@code i&#125;</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @throws NoSuchElementException no key is associated with index &#123;@code i&#125;</span><br><span class="line">     */</span><br><span class="line">    public Key keyOf(int i) &#123;</span><br><span class="line">        if (!contains(i)) throw new NoSuchElementException(&quot;index is not in the priority queue&quot;);</span><br><span class="line">        else return keys[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Change the key associated with index &#123;@code i&#125; to the specified value.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to change</span><br><span class="line">     * @param  key change the key associated with index &#123;@code i&#125; to this key</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     */</span><br><span class="line">    public void changeKey(int i, Key key) &#123;</span><br><span class="line">        if (!contains(i)) throw new NoSuchElementException(&quot;index is not in the priority queue&quot;);</span><br><span class="line">        keys[i] = key;</span><br><span class="line">        swim(qp[i]);</span><br><span class="line">        sink(qp[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">     * Change the key associated with index &#123;@code i&#125; to the specified value.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to change</span><br><span class="line">     * @param  key change the key associated with index &#123;@code i&#125; to this key</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @deprecated Replaced by &#123;@code changeKey(int, Key)&#125;.</span><br><span class="line">     */</span><br><span class="line">    @Deprecated</span><br><span class="line">    public void change(int i, Key key) &#123;</span><br><span class="line">        changeKey(i, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Increase the key associated with index &#123;@code i&#125; to the specified value.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to increase</span><br><span class="line">     * @param  key increase the key associated with index &#123;@code i&#125; to this key</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @throws IllegalArgumentException if &#123;@code key &lt;= keyOf(i)&#125;</span><br><span class="line">     * @throws NoSuchElementException no key is associated with index &#123;@code i&#125;</span><br><span class="line">     */</span><br><span class="line">    public void increaseKey(int i, Key key) &#123;</span><br><span class="line">        if (!contains(i)) throw new NoSuchElementException(&quot;index is not in the priority queue&quot;);</span><br><span class="line">        if (keys[i].compareTo(key) &gt;= 0)</span><br><span class="line">            throw new IllegalArgumentException(&quot;Calling increaseKey() with given argument would not strictly increase the key&quot;);</span><br><span class="line"></span><br><span class="line">        keys[i] = key;</span><br><span class="line">        swim(qp[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Decrease the key associated with index &#123;@code i&#125; to the specified value.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to decrease</span><br><span class="line">     * @param  key decrease the key associated with index &#123;@code i&#125; to this key</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @throws IllegalArgumentException if &#123;@code key &gt;= keyOf(i)&#125;</span><br><span class="line">     * @throws NoSuchElementException no key is associated with index &#123;@code i&#125;</span><br><span class="line">     */</span><br><span class="line">    public void decreaseKey(int i, Key key) &#123;</span><br><span class="line">        if (!contains(i)) throw new NoSuchElementException(&quot;index is not in the priority queue&quot;);</span><br><span class="line">        if (keys[i].compareTo(key) &lt;= 0)</span><br><span class="line">            throw new IllegalArgumentException(&quot;Calling decreaseKey() with given argument would not strictly decrease the key&quot;);</span><br><span class="line"></span><br><span class="line">        keys[i] = key;</span><br><span class="line">        sink(qp[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Remove the key on the priority queue associated with index &#123;@code i&#125;.</span><br><span class="line">     *</span><br><span class="line">     * @param  i the index of the key to remove</span><br><span class="line">     * @throws IllegalArgumentException unless &#123;@code 0 &lt;= i &lt; maxN&#125;</span><br><span class="line">     * @throws NoSuchElementException no key is associated with index &#123;@code i&#125;</span><br><span class="line">     */</span><br><span class="line">    public void delete(int i) &#123;</span><br><span class="line">        if (!contains(i)) throw new NoSuchElementException(&quot;index is not in the priority queue&quot;);</span><br><span class="line">        int index = qp[i];</span><br><span class="line">        exch(index, n--);</span><br><span class="line">        swim(index);</span><br><span class="line">        sink(index);</span><br><span class="line">        keys[i] = null;</span><br><span class="line">        qp[i] = -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   /***************************************************************************</span><br><span class="line">    * General helper functions.</span><br><span class="line">    ***************************************************************************/</span><br><span class="line">    private boolean less(int i, int j) &#123;</span><br><span class="line">        return keys[pq[i]].compareTo(keys[pq[j]]) &lt; 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void exch(int i, int j) &#123;</span><br><span class="line">        int swap = pq[i];</span><br><span class="line">        pq[i] = pq[j];</span><br><span class="line">        pq[j] = swap;</span><br><span class="line">        qp[pq[i]] = i;</span><br><span class="line">        qp[pq[j]] = j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   /***************************************************************************</span><br><span class="line">    * Heap helper functions.</span><br><span class="line">    ***************************************************************************/</span><br><span class="line">    private void swim(int k) &#123;</span><br><span class="line">        while (k &gt; 1 &amp;&amp; less(k/2, k)) &#123;</span><br><span class="line">            exch(k, k/2);</span><br><span class="line">            k = k/2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void sink(int k) &#123;</span><br><span class="line">        while (2*k &lt;= n) &#123;</span><br><span class="line">            int j = 2*k;</span><br><span class="line">            if (j &lt; n &amp;&amp; less(j, j+1)) j++;</span><br><span class="line">            if (!less(k, j)) break;</span><br><span class="line">            exch(k, j);</span><br><span class="line">            k = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Returns an iterator that iterates over the keys on the</span><br><span class="line">     * priority queue in descending order.</span><br><span class="line">     * The iterator doesn&apos;t implement &#123;@code remove()&#125; since it&apos;s optional.</span><br><span class="line">     *</span><br><span class="line">     * @return an iterator that iterates over the keys in descending order</span><br><span class="line">     */</span><br><span class="line">    public Iterator&lt;Integer&gt; iterator() &#123;</span><br><span class="line">        return new HeapIterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class HeapIterator implements Iterator&lt;Integer&gt; &#123;</span><br><span class="line">        // create a new pq</span><br><span class="line">        private IndexMaxPQ&lt;Key&gt; copy;</span><br><span class="line"></span><br><span class="line">        // add all elements to copy of heap</span><br><span class="line">        // takes linear time since already in heap order so no keys move</span><br><span class="line">        public HeapIterator() &#123;</span><br><span class="line">            copy = new IndexMaxPQ&lt;Key&gt;(pq.length - 1);</span><br><span class="line">            for (int i = 1; i &lt;= n; i++)</span><br><span class="line">                copy.insert(pq[i], keys[pq[i]]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public boolean hasNext()  &#123; return !copy.isEmpty();                     &#125;</span><br><span class="line">        public void remove()      &#123; throw new UnsupportedOperationException();  &#125;</span><br><span class="line"></span><br><span class="line">        public Integer next() &#123;</span><br><span class="line">            if (!hasNext()) throw new NoSuchElementException();</span><br><span class="line">            return copy.delMax();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Unit tests the &#123;@code IndexMaxPQ&#125; data type.</span><br><span class="line">     *</span><br><span class="line">     * @param args the command-line arguments</span><br><span class="line">     */</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        // insert a bunch of strings</span><br><span class="line">        String[] strings = &#123; &quot;it&quot;, &quot;was&quot;, &quot;the&quot;, &quot;best&quot;, &quot;of&quot;, &quot;times&quot;, &quot;it&quot;, &quot;was&quot;, &quot;the&quot;, &quot;worst&quot; &#125;;</span><br><span class="line"></span><br><span class="line">        IndexMaxPQ&lt;String&gt; pq = new IndexMaxPQ&lt;String&gt;(strings.length);</span><br><span class="line">        for (int i = 0; i &lt; strings.length; i++) &#123;</span><br><span class="line">            pq.insert(i, strings[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // print each key using the iterator</span><br><span class="line">        for (int i : pq) &#123;</span><br><span class="line">            StdOut.println(i + &quot; &quot; + strings[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        StdOut.println();</span><br><span class="line"></span><br><span class="line">        // increase or decrease the key</span><br><span class="line">        for (int i = 0; i &lt; strings.length; i++) &#123;</span><br><span class="line">            if (StdRandom.uniform() &lt; 0.5)</span><br><span class="line">                pq.increaseKey(i, strings[i] + strings[i]);</span><br><span class="line">            else</span><br><span class="line">                pq.decreaseKey(i, strings[i].substring(0, 1));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // delete and print each key</span><br><span class="line">        while (!pq.isEmpty()) &#123;</span><br><span class="line">            String key = pq.maxKey();</span><br><span class="line">            int i = pq.delMax();</span><br><span class="line">            StdOut.println(i + &quot; &quot; + key);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println();</span><br><span class="line"></span><br><span class="line">        // reinsert the same strings</span><br><span class="line">        for (int i = 0; i &lt; strings.length; i++) &#123;</span><br><span class="line">            pq.insert(i, strings[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // delete them in random order</span><br><span class="line">        int[] perm = new int[strings.length];</span><br><span class="line">        for (int i = 0; i &lt; strings.length; i++)</span><br><span class="line">            perm[i] = i;</span><br><span class="line">        StdRandom.shuffle(perm);</span><br><span class="line">        for (int i = 0; i &lt; perm.length; i++) &#123;</span><br><span class="line">            String key = pq.keyOf(perm[i]);</span><br><span class="line">            pq.delete(perm[i]);</span><br><span class="line">            StdOut.println(perm[i] + &quot; &quot; + key);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h6 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料:"></a>参考资料:</h6><ul>
+<li><p><a href="http://http://algs4.cs.princeton.edu" target="_blank" rel="noopener">算法（第4版）Robert Sedgewick - 人民邮电出版社</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/nullzx/p/6624731.html" target="_blank" rel="noopener">索引优先队列的工作原理与简易实现</a></p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
+          
+            <a href="/tags/Data-Structuer/" rel="tag"># Data Structuer</a>
+          
+            <a href="/tags/Heap/" rel="tag"># Heap</a>
+          
+            <a href="/tags/Queue/" rel="tag"># Queue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/26/Backtracking/" rel="next" title="Backtracking">
+                <i class="fa fa-chevron-left"></i> Backtracking
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/03/Arrays-asList/" rel="prev" title="Arrays.asList">
+                Arrays.asList <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400" alt="Doodlister">
+          <p class="site-author-name" itemprop="name">Doodlister</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/doodlister" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#优先队列与索引优先队列"><span class="nav-number">1.</span> <span class="nav-text">优先队列与索引优先队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引优先队列的实现原理"><span class="nav-number">2.</span> <span class="nav-text">索引优先队列的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简易版本的索引优先队列"><span class="nav-number">2.1.</span> <span class="nav-text">简易版本的索引优先队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">2.1.1.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keys-–-9-2-3-5-7-8-1"><span class="nav-number">2.2.</span> <span class="nav-text">keys | – | 9 | 2 | 3 | 5 | 7 | 8 | 1 |</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除最大元素"><span class="nav-number">2.2.1.</span> <span class="nav-text">删除最大元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keys-–-2-5-3-1-7-8"><span class="nav-number">2.3.</span> <span class="nav-text">keys | – | 2 | 5 | 3 | 1 | 7 | 8 |</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#插入元素"><span class="nav-number">2.3.1.</span> <span class="nav-text">插入元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keys-–-6-5-2-1-7-8-3"><span class="nav-number">2.4.</span> <span class="nav-text">keys | – | 6 | 5 | 2 | 1 | 7 | 8 | 3 |</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整版本的索引优先队列"><span class="nav-number">2.5.</span> <span class="nav-text">完整版本的索引优先队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除元素"><span class="nav-number">2.5.1.</span> <span class="nav-text">删除元素</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引优先队列的代码实现"><span class="nav-number">3.</span> <span class="nav-text">索引优先队列的代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#参考资料"><span class="nav-number">3.0.0.0.0.1.</span> <span class="nav-text">参考资料:</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doodlister</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

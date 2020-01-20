@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Doodlister,Doodle,szy,孙子尧,sunziyao,893197978">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基础概念散列表散列表)（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap">
+<meta property="og:url" content="http://yoursite.com/2020/01/20/HashMap/index.html">
+<meta property="og:site_name" content="Another Doodlister&#39;s Life">
+<meta property="og:description" content="基础概念散列表散列表)（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/05/08/5cd1d2be77958.jpg">
+<meta property="og:updated_time" content="2020-01-20T11:32:09.250Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HashMap">
+<meta name="twitter:description" content="基础概念散列表散列表)（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。">
+<meta name="twitter:image" content="https://i.loli.net/2019/05/08/5cd1d2be77958.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/20/HashMap/">
+
+
+
+
+
+  <title>HashMap | Another Doodlister's Life</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c01ad58b493de891f9e4399cdd84491f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Another Doodlister's Life</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">那个涂鸦者的传说</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/20/HashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Doodlister">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Another Doodlister's Life">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">HashMap</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-20T19:29:17+08:00">
+                2020-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h4 id="散列表"><a href="#散列表" class="headerlink" title="散列表"></a>散列表</h4><p><a href="[https://zh.wikipedia.org/zh-cn/%E5%93%88%E5%B8%8C%E8%A1%A8](https://zh.wikipedia.org/zh-cn/哈希表">散列表</a>)（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
+<a id="more"></a>
+<h4 id="负载因子"><a href="#负载因子" class="headerlink" title="负载因子"></a>负载因子</h4><p>负载因子是：散列表的元素个数\散列表的长度。由于表长是定值，所以负载因子越大，代表填入的元素越多，那么发生冲突的概率也就越大。</p>
+<h4 id="拉链法"><a href="#拉链法" class="headerlink" title="拉链法"></a>拉链法</h4><p>当发生冲突的时候，HashMap是采用拉链法来解决冲突的。</p>
+<p><img src="https://i.loli.net/2019/05/08/5cd1d2be77958.jpg" alt="拉链法"></p>
+<hr>
+<p>一下针对HashMap的分析都是源自于JDK1.7版本:</p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">16</span>; <span class="comment">//初始容量 1&lt;&lt;4</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1073741824</span>; <span class="comment">//最大容量 1&lt;&lt;30</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75F</span>; <span class="comment">//负载因子</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> HashMap.Entry&lt;?, ?&gt;[] EMPTY_TABLE = <span class="keyword">new</span> HashMap.Entry[<span class="number">0</span>]; </span><br><span class="line"><span class="keyword">transient</span> HashMap.Entry&lt;K, V&gt;[] table;</span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size; <span class="comment">//表中所有节点的数量</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> ALTERNATIVE_HASHING_THRESHOLD_DEFAULT = <span class="number">2147483647</span>;</span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> hashSeed;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Set&lt;java.util.Map.Entry&lt;K, V&gt;&gt; entrySet;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">362498820763181265L</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="HashMap-Entry"><a href="#HashMap-Entry" class="headerlink" title="HashMap.Entry"></a>HashMap.Entry</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">util</span>.<span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">     <span class="keyword">final</span> K key;</span><br><span class="line">     V value;</span><br><span class="line">     HashMap.Entry&lt;K, V&gt; next;</span><br><span class="line">     <span class="keyword">int</span> hash;</span><br><span class="line"></span><br><span class="line">     Entry(<span class="keyword">int</span> h, K k, V v, HashMap.Entry&lt;K, V&gt; n) &#123;</span><br><span class="line">         <span class="keyword">this</span>.value = v;</span><br><span class="line">         <span class="keyword">this</span>.next = n;</span><br><span class="line">         <span class="keyword">this</span>.key = k;</span><br><span class="line">         <span class="keyword">this</span>.hash = h;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> K <span class="title">getKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">this</span>.key;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">getValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">this</span>.value;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">setValue</span><span class="params">(V newValue)</span> </span>&#123;</span><br><span class="line">         V oldValue = <span class="keyword">this</span>.value;</span><br><span class="line">         <span class="keyword">this</span>.value = newValue;</span><br><span class="line">         <span class="keyword">return</span> oldValue;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> java.util.Map.Entry)) &#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">             java.util.Map.Entry e = (java.util.Map.Entry)o;</span><br><span class="line">             Object k1 = <span class="keyword">this</span>.getKey();</span><br><span class="line">             Object k2 = e.getKey();</span><br><span class="line">             <span class="keyword">if</span> (k1 == k2 || k1 != <span class="keyword">null</span> &amp;&amp; k1.equals(k2)) &#123;</span><br><span class="line">                 Object v1 = <span class="keyword">this</span>.getValue();</span><br><span class="line">                 Object v2 = e.getValue();</span><br><span class="line">                 <span class="keyword">if</span> (v1 == v2 || v1 != <span class="keyword">null</span> &amp;&amp; v1.equals(v2)) &#123;</span><br><span class="line">                     <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         <span class="keyword">return</span> Objects.hashCode(<span class="keyword">this</span>.getKey()) ^ Objects.hashCode(<span class="keyword">this</span>.getValue());</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">this</span>.getKey() + <span class="string">"="</span> + <span class="keyword">this</span>.getValue();</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">void</span> <span class="title">recordAccess</span><span class="params">(HashMap&lt;K, V&gt; m)</span> </span>&#123;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">void</span> <span class="title">recordRemoval</span><span class="params">(HashMap&lt;K, V&gt; m)</span> </span>&#123;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>HashMap.Entry是HashMap Key—Value存储的基本结构。</p>
+<ol>
+<li>key 键</li>
+<li>value   值 </li>
+<li>next 构成链表，用来解决冲突</li>
+<li>key 的hash值</li>
+</ol>
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><p>如下代码应该是我们初始化一个 HashMap 最常见的场景了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HashMap map = new HashMap();</span><br></pre></td></tr></table></figure>
+<!-- more -->以下这段代码展示了默认HashMap初始化的过程：<br><br>1. 指定初始化数组大小为16<br>2. 初始化负载因子为0.75<br><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(<span class="number">16</span>, <span class="number">0.75F</span>);</span><br><span class="line">&#125;initHashSeedAsNeeded</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.table = (HashMap.Entry[])EMPTY_TABLE;</span><br><span class="line">    <span class="keyword">this</span>.hashSeed = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">this</span>.entrySet = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal initial capacity: "</span> + initialCapacity);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (initialCapacity &gt; <span class="number">1073741824</span>) &#123;</span><br><span class="line">            initialCapacity = <span class="number">1073741824</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (loadFactor &gt; <span class="number">0.0F</span> &amp;&amp; !Float.isNaN(loadFactor)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.loadFactor = loadFactor;</span><br><span class="line">    initHashSeedAsNeeded        <span class="keyword">this</span>.threshold = initialCapacity;</span><br><span class="line">            <span class="keyword">this</span>.init();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal load factor: "</span> + loadFactor);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="put方法"><a href="#put方法" class="headerlink" title="put方法"></a>put方法</h3><p>put方法代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.table == EMPTY_TABLE) &#123;</span><br><span class="line">            <span class="keyword">this</span>.inflateTable(<span class="keyword">this</span>.threshold);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.putForNullKey(value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> hash = <span class="keyword">this</span>.hash(key);</span><br><span class="line">            <span class="keyword">int</span> i = indexFor(hash, <span class="keyword">this</span>.table.length);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(HashMap.Entry e = <span class="keyword">this</span>.table[i]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">                Object k;</span><br><span class="line">                <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) &#123;</span><br><span class="line">                    V oldValue = e.value;</span><br><span class="line">                    e.value = value;</span><br><span class="line">                    e.recordAccess(<span class="keyword">this</span>);</span><br><span class="line">                    <span class="keyword">return</span> oldValue;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ++<span class="keyword">this</span>.modCount;</span><br><span class="line">            <span class="keyword">this</span>.addEntry(hash, key, value, i);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>主要执行流程如下：</p>
+<ol>
+<li>如果table为EMPTY_TABLE，那么先inflateTable</li>
+<li>如果插入的key为null，那么对null值特殊处理（可见HashMap是允许插入null值的）</li>
+<li>否则执行正常插入逻辑<ol>
+<li>先算出key的hash</li>
+<li>找到hash对应table中的index</li>
+<li>然后在对应index中的链表进行遍历</li>
+<li>如果插入的key已经存在，则把其value替换为新值，并返回旧值</li>
+<li>否则直接插入新的key</li>
+</ol>
+</li>
+</ol>
+<p>上面步骤中用到的一些函数介绍如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private void inflateTable(int toSize) &#123;</span><br><span class="line">       int capacity = roundUpToPowerOf2(toSize);</span><br><span class="line">       this.threshold = (int)Math.min((float)capacity * this.loadFactor, 1.07374182E9F);</span><br><span class="line">       this.table = new HashMap.Entry[capacity];</span><br><span class="line">       this.initHashSeedAsNeeded(capacity);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>用于初始化HashMap的table，确保指定的容量为2的幂。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void addEntry(int hash, K key, V value, int bucketIndex) &#123;</span><br><span class="line">       if (this.size &gt;= this.threshold &amp;&amp; null != this.table[bucketIndex]) &#123;</span><br><span class="line">           this.resize(2 * this.table.length);</span><br><span class="line">           hash = null != key ? this.hash(key) : 0;</span><br><span class="line">           bucketIndex = indexFor(hash, this.table.length);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       this.createEntry(hash, key, value, bucketIndex);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到如果size&gt;=threadHold的时候是需要扩容的，扩容到原来table.length的二倍。resize的过程如下：</p>
+<ol>
+<li><p>先保存旧的table </p>
+</li>
+<li><p>如果oldTable 的容量为 2^30，那么就扩容到2^31 - 1 （防止溢出）</p>
+</li>
+<li><p>否则用newCapacity进行扩容（可以看到这里涉及到把旧数组的内容保存到新的数组，涉及到数组的复制 rehash的过程是一个非常耗时的操作。）</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void resize(int newCapacity) &#123;</span><br><span class="line">       HashMap.Entry[] oldTable = this.table;</span><br><span class="line">       int oldCapacity = oldTable.length;</span><br><span class="line">       if (oldCapacity == 1073741824) &#123;</span><br><span class="line">           this.threshold = 2147483647;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           HashMap.Entry[] newTable = new HashMap.Entry[newCapacity];</span><br><span class="line">           this.transfer(newTable, this.initHashSeedAsNeeded(newCapacity));</span><br><span class="line">           this.table = newTable;</span><br><span class="line">           this.threshold = (int)Math.min((float)newCapacity * this.loadFactor, 1.07374182E9F);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>transfer方法主要是把旧数组的内容转移到新数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">void transfer(HashMap.Entry[] newTable, boolean rehash) &#123;</span><br><span class="line">    int newCapacity = newTable.length;</span><br><span class="line">    HashMap.Entry[] arr$ = this.table;</span><br><span class="line">    int len$ = arr$.length;</span><br><span class="line"></span><br><span class="line">    HashMap.Entry next;</span><br><span class="line">    for(int i$ = 0; i$ &lt; len$; ++i$) &#123;</span><br><span class="line">        for(HashMap.Entry e = arr$[i$]; null != e; e = next) &#123;</span><br><span class="line">            next = e.next;</span><br><span class="line">            if (rehash) &#123;</span><br><span class="line">                e.hash = null == e.key ? 0 : this.hash(e.key);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            int i = indexFor(e.hash, newCapacity);</span><br><span class="line">            e.next = newTable[i];</span><br><span class="line">            newTable[i] = e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主要流程如下：</p>
+<ol>
+<li>遍历原来的老数组</li>
+<li>针对老数组每个index对应的链表进行便利</li>
+<li>如果需要reshah则重新计算hash</li>
+<li>根据hash找到index</li>
+<li>然后头插进链表</li>
+</ol>
+<p>可以看到transfer是非常耗时的，每一次transfer需要遍历所有的Entry一次，时间复杂度 上升到了O(n)..</p>
+<p>针对上面方法，是否需要rehash是由initHashSeedAsNeeded函数控制的：</p>
+<p>hashSeed的默认值为0，hashSeed会在每一次capacity发生变化的时候重新计算..</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">final boolean initHashSeedAsNeeded(int capacity) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    boolean currentAltHashing = this.hashSeed != 0;</span><br><span class="line">    boolean useAltHashing = VM.isBooted() &amp;&amp; capacity &gt;= HashMap.Holder.ALTERNATIVE_HASHING_THRESHOLD;</span><br><span class="line">    boolean switching = currentAltHashing ^ useAltHashing;</span><br><span class="line">    if (switching) &#123;</span><br><span class="line">        this.hashSeed = useAltHashing ? Hashing.randomHashSeed(this) : 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return switching;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面说的到hash方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">final int hash(Object k) &#123;</span><br><span class="line">    int h = hashSeed;</span><br><span class="line">    if (0 != h &amp;&amp; k instanceof String) &#123;</span><br><span class="line">        return sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">    // This function ensures that hashCodes that differ only by</span><br><span class="line">    // constant multiples at each bit position have a bounded</span><br><span class="line">    // number of collisions (approximately 8 at default load factor).</span><br><span class="line">    h ^= (h &gt;&gt;&gt; 20) ^ (h &gt;&gt;&gt; 12);</span><br><span class="line">    return h ^ (h &gt;&gt;&gt; 7) ^ (h &gt;&gt;&gt; 4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法的主要作用就是对存入的key的hash进行二次hash，这样做的作用就是防止对象分布的不均匀，减少冲突。</p>
+<p><strong>*  因为table的长度都是2^n的形式，如果不进行rehash的话，如果两个对象Hash的低位相同，特别容易造成冲突如：</strong></p>
+<p>0101 0000 0000 1111 = 20495<br>0111 0000 0000 1111 = 28687</p>
+<p>假设现在表长为16，现在直接算出其Table Index 分别为 </p>
+<ul>
+<li><p>20495 %16  =  15</p>
+</li>
+<li><p>28687 % 16 =  15</p>
+</li>
+</ul>
+<p>所以hash方法可以尽量让每一位都参与运算，尽量让相近的数字最后得到的hash分散开来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void createEntry(int hash, K key, V value, int bucketIndex) &#123;</span><br><span class="line">      HashMap.Entry&lt;K, V&gt; e = this.table[bucketIndex];</span><br><span class="line">      this.table[bucketIndex] = new HashMap.Entry(hash, key, value, e);</span><br><span class="line">      ++this.size;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到新节点是采用头插法进行插入的。</p>
+<h3 id="插入方法的总结"><a href="#插入方法的总结" class="headerlink" title="插入方法的总结"></a>插入方法的总结</h3><ol>
+<li>HashMap 初始化负载因子为0.75</li>
+<li>HashMap 初始化BucketTable长度为16</li>
+<li>BucketTable在第一次调用put方法的时候初始化</li>
+<li>可以使用null作为key，且null的BucketTableIndex 为0</li>
+<li>调用put方法的时候如果size&gt;threadHold需要进行扩容(threadHold = newCapacity * loadFactory)</li>
+<li>扩容需要进行rehash和BucketTable的复制，很耗费时间</li>
+</ol>
+<h2 id="remove方法"><a href="#remove方法" class="headerlink" title="remove方法"></a>remove方法</h2><p>根据key 删除Entry并返回Entry的value，如果返回的Entry为null那就返回null</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public V remove(Object key) &#123;</span><br><span class="line">    Entry&lt;K,V&gt; e = removeEntryForKey(key);</span><br><span class="line">    return (e == null ? null : e.value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来再看removeEntryForKey这个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">final Entry&lt;K,V&gt; removeEntryForKey(Object key) &#123;</span><br><span class="line">    if (size == 0) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    int hash = (key == null) ? 0 : hash(key);</span><br><span class="line">    int i = indexFor(hash, table.length);</span><br><span class="line">    Entry&lt;K,V&gt; prev = table[i];</span><br><span class="line">    Entry&lt;K,V&gt; e = prev;</span><br><span class="line"></span><br><span class="line">    while (e != null) &#123;</span><br><span class="line">        Entry&lt;K,V&gt; next = e.next;</span><br><span class="line">        Object k;</span><br><span class="line">        if (e.hash == hash &amp;&amp;</span><br><span class="line">            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) &#123;</span><br><span class="line">            modCount++;</span><br><span class="line">            size--;</span><br><span class="line">            if (prev == e)</span><br><span class="line">                table[i] = next;</span><br><span class="line">            else</span><br><span class="line">                prev.next = next;</span><br><span class="line">            e.recordRemoval(this);</span><br><span class="line">            return e;</span><br><span class="line">        &#125;</span><br><span class="line">        prev = e;</span><br><span class="line">        e = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到删除流程并没有进行缩容操作，所以大量put操作然后再进行大量remove操作并且还持有该引用的话会浪费很多内存。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/12/MySQL/" rel="next" title="MySQL">
+                <i class="fa fa-chevron-left"></i> MySQL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400" alt="Doodlister">
+          <p class="site-author-name" itemprop="name">Doodlister</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/doodlister" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#散列表"><span class="nav-number">1.0.1.</span> <span class="nav-text">散列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#负载因子"><span class="nav-number">1.0.2.</span> <span class="nav-text">负载因子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拉链法"><span class="nav-number">1.0.3.</span> <span class="nav-text">拉链法</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap"><span class="nav-number">2.</span> <span class="nav-text">HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap-Entry"><span class="nav-number">3.</span> <span class="nav-text">HashMap.Entry</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法"><span class="nav-number">3.1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#put方法"><span class="nav-number">3.2.</span> <span class="nav-text">put方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入方法的总结"><span class="nav-number">3.3.</span> <span class="nav-text">插入方法的总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#remove方法"><span class="nav-number">4.</span> <span class="nav-text">remove方法</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doodlister</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

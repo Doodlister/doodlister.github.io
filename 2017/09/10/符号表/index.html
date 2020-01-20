@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Algorithm,Data Structuer,">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="符号表符号表是一种将key-value关联存储的数据结构。支持两种基本操作put(将key-value存入表中),get(根据key查找value)。其中表中的键(key)一定唯一。">
+<meta name="keywords" content="Algorithm,Data Structuer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="符号表">
+<meta property="og:url" content="http://yoursite.com/2017/09/10/符号表/index.html">
+<meta property="og:site_name" content="Another Doodlister&#39;s Life">
+<meta property="og:description" content="符号表符号表是一种将key-value关联存储的数据结构。支持两种基本操作put(将key-value存入表中),get(根据key查找value)。其中表中的键(key)一定唯一。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-12T10:18:39.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="符号表">
+<meta name="twitter:description" content="符号表符号表是一种将key-value关联存储的数据结构。支持两种基本操作put(将key-value存入表中),get(根据key查找value)。其中表中的键(key)一定唯一。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/10/符号表/">
+
+
+
+
+
+  <title>符号表 | Another Doodlister's Life</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c01ad58b493de891f9e4399cdd84491f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Another Doodlister's Life</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">那个涂鸦者的传说</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/10/符号表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Doodlister">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Another Doodlister's Life">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">符号表</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T22:57:30+08:00">
+                2017-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h1><p>符号表是一种将key-value关联存储的数据结构。支持两种基本操作put(将key-value存入表中),get(根据key查找value)。其中表中的键(key)一定唯一。</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h2 id="API设计"><a href="#API设计" class="headerlink" title="API设计"></a>API设计</h2><pre><code>public interface ST&lt;Key, Value&gt; {
+     void put(Key key,Value value);
+     Value get(Key key);
+     void delete(Key key);
+     boolean contains(Key key);
+     boolean isEmpty();
+     int size();
+     Iterable&lt;Key&gt; keys(); //返回表中所有键的集合
+}
+</code></pre><p>基于以上定义的API我们可以完成各种版本的符号表实现。</p>
+<h2 id="基于无序链表的顺序查找表的实现"><a href="#基于无序链表的顺序查找表的实现" class="headerlink" title="基于无序链表的顺序查找表的实现"></a>基于无序链表的顺序查找表的实现</h2><pre><code>import java.util.HashSet;
+import java.util.Set;
+
+public class SequentialSearchST&lt;Key, Value&gt; implements ST&lt;Key,Value&gt;{
+    private class Node{
+        public Key key;
+        public Value value;
+        public Node next;
+        public Node(Key key, Value value,Node next) {
+            this.key = key;
+            this.value = value;
+            this.next=next;
+        }
+
+    }
+    private Node first; //链表首节点
+    private int N=0;    //节点数量计数器
+    @Override
+    public void put(Key key, Value value) {
+        //先检查有没有重复的
+        for(Node i=first;i!=null;i=i.next){
+            if(i.key.equals(key)){
+                i.value=value;
+                return;
+            }
+        }
+        first=new Node(key, value, first);
+        N++;
+    }
+
+    @Override
+    public Value get(Key key) {
+        for(Node i=first;i!=null;i=i.next){
+            if(i.key.equals(key)){
+                return i.value;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void delete(Key key) {
+        if(first.key.equals(key)){//删除首节点
+            first=first.next;
+            return;
+        }
+        Node i;
+        Node per=null;
+        for(i=first;i.next!=null;i=i.next){//删除中间节点 
+            if(i.next.key.equals(key)){
+                i.next=i.next.next;
+                return;
+            }
+            per=i;
+        }
+        if(i.equals(key)){//删除尾节点
+            per.next=null;
+        }
+    }
+
+    @Override
+    public boolean contains(Key key) {
+        for(Node i=first;i!=null;i=i.next){
+            if(i.key.equals(key)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+
+        return  N==0;
+    }
+
+    @Override
+    public int size() {
+
+        return N;
+    }
+
+    @Override
+    public Iterable&lt;Key&gt; keys() {
+        Set&lt;Key&gt; set=new HashSet&lt;Key&gt;();
+        for(Node i=first;i!=null;i=i.next){
+            set.add(i.key);
+        }
+        return set;
+    }
+}
+</code></pre><p>以上实现是基于顺序链表的插入插入键值对的过程即链表增加新的节点，删除键值对即删除链表的节点。同时我们可以看到，基于链表的实现中的对符号表的增、删、改、查都涉及了对链表大量的便利操作。对于大规模的数据而言此份实现的比较次数也会大大增加。<br><strong>在含有N个键值的基于链表的符号表中，未命中的查找和输入操作都需要N此比较。命中查找在最坏情况下需要N此比较。特别的，像一个空表中插入N个值需要（1+2+3+4+5+…+N-1）~N^2/2次比较</strong><br>可以看到对于大量数据这是非常费时的一种算法。因此我们需要更加快速的方法来实现此算法。其中一种比较好的方法就是基于有序数组的二分查找</p>
+<h2 id="基于有序数组的二分查找"><a href="#基于有序数组的二分查找" class="headerlink" title="基于有序数组的二分查找"></a>基于有序数组的二分查找</h2><h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code>   public class BinarySearchST&lt;Key extends Comparable&lt;Key&gt;, Value&gt; implements ST&lt;Key, Value&gt;{
+    private Key[] keys;
+    private Value[] values;
+    private int N;
+
+    public BinarySearchST(int capacity) {
+        this.keys=(Key[]) new Comparable[capacity];
+        this.values=(Value[]) new Object[capacity];
+    }
+
+
+    @Override
+    public  Value get(Key key) {
+        int location=rank(key);
+        if(location==N)         //未找到当前key
+            return null;
+        return values[location];
+    }
+
+    @Override
+    public void put(Key key, Value value) {
+        int location=rank(key);
+        if(location&lt;N &amp;&amp; keys[location].compareTo(key)==0){
+            //更新原有值
+            values[location]=value;
+            return;
+        }
+
+        /*从后向前更新
+         * */
+        for(int i=N;i&gt;location;i--){
+            keys[i]=keys[i-1];
+            values[i]=values[i-1];
+        }
+        keys[location]=key;
+        values[location]=value;
+        N++;
+    }
+    @Override
+    public void delete(Key key) {
+        int location=rank(key);
+        if(location==N)
+            return;
+
+    }
+    @Override
+    public boolean contains(Key key) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public Iterable&lt;Key&gt; keys() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return N;
+    }
+
+
+
+    private int rank(Key key){
+        int lo=0;
+        int hi=N-1;
+        while(lo&lt;hi){
+            int mid=(lo+hi)/2;
+            int cmp=keys[mid].compareTo(key);
+            if(cmp&lt;0)        //key比中间大
+                lo=mid+1;
+            else if(cmp&gt;0)
+                hi=mid-1;
+            else
+                return mid;
+        }
+        return lo;
+    }
+
+}
+</code></pre><p>来看get(Key key)的方法实现，我们用到了一个名为rank(Key key)的函数。此函数的作用是返回当前符号表中小于当前Key的元素的个数。因为我们这是一个有序符号表，所以Key返回的值正好就是当前元素在符号表数组中的位置了(因为数组的下标是从零开始的)。</p>
+<h2 id="基于二叉查找树的符号表"><a href="#基于二叉查找树的符号表" class="headerlink" title="基于二叉查找树的符号表"></a>基于二叉查找树的符号表</h2><p>通过二分查找实现的符号表已经大大提高了<strong>查找</strong>这一操作的性能，从原来的N下降到了logN，而插入操作还是O(N)级别的。对于中等规模的数据这样的数据结构还是 可以应付的，而对于上百万千万几倍的数据O(N)级别的复杂度还是相对来说比较高的。而基于二叉树查找树实现的符号表则可以把插入的复杂度也降低到O(logN)。</p>
+<h3 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h3><p>一颗二叉查找树(BST)是一棵二叉树，其中每一个节点都含有一个Comparable的键（以及相关的值）且每一个节点的键都大于其左侧子树任意节点的键而小于右侧节点任意节点的键。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><h4 id="最大键和最小键"><a href="#最大键和最小键" class="headerlink" title="最大键和最小键"></a>最大键和最小键</h4><p>首先递归的入口为根节点，一直向左查找直到查找到节点的做左节点为空时，找到最小键节点。<br>最大键节点则是向右查找。</p>
+<pre><code>public Key min(){
+        return min(root);
+    }
+public Key min(Node x){
+    if(x.left == null)
+        return x.key;
+    return min(x.left);
+}
+</code></pre><h4 id="向上取整和向下取整"><a href="#向上取整和向下取整" class="headerlink" title="向上取整和向下取整"></a>向上取整和向下取整</h4><p>如果给定的键key小于二叉查找树根节点的键，那么小于等于key的最大键(floor)一定存在于根节点的左子树中;如果给定键的key大于二叉查找树根节点的键，那么只有当根节点右子树中存在小于等于key的节点时，小于等于key的最大键才会出现在右子树，否则根节点就是小于等于key的最大键。这段描述说明了fllor（）方法的递归实现。同时也递推地证明了它能够计算出预期的结果。将”左”变为”右”（同时将”小于”变为”大于”）就能有得到ceiling()的算法。</p>
+<pre><code>public Key floor(Key key){
+    Node x=floor(root,key);
+    if(x == null) return null;
+    return x.key;
+}
+private  Node floor(Node x, Key key){
+    if(x == null) return null;
+    int cmp=key.compareTo(x.key);
+    if(cmp == 0) return x;
+    if(cmp&lt;0) return floor(x.left,key);
+    Node t = floor(x.right,key);
+    if(t != null) return t;
+    else return x;
+}
+</code></pre><h4 id="选择操作"><a href="#选择操作" class="headerlink" title="选择操作"></a>选择操作</h4><p>如果我们想要查找排名为k的键(即树中正好有k个小于它的键)。如果左子树的节点树t&gt;k则我们向左子树中查找。如果t=k,那么就返回根节点中的键。如果t&lt;k，只需向右子树中查找排名为(k-t-1)的键.</p>
+<pre><code>public Key select(int k){
+        if(k&lt;=0)
+            return null;
+        return select(root,k).key;
+    }
+private Node select(Node x,int k){
+    if(x == null) return null;
+    int t = size(x.left);
+    if(t &gt; k){
+        return select(x.left,k);
+    }
+    if(t &lt; k){
+        return select(x.right,k - t - 1);
+    }
+    return x;
+}
+</code></pre><h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h4><h5 id="删除最大键和最小键"><a href="#删除最大键和最小键" class="headerlink" title="删除最大键和最小键"></a>删除最大键和最小键</h5><p> 和put()方法一样，我们的方法接受一个指向节点的链接，并返回一个指向节点的链接。这样我们就能方便的改变树的结构了，将放回的链接赋给作为番薯的链接。对于deleteMin()方法，我们要不断深入根节点的左子树直到遇见一个空连接，然后将指向该节点的链接指向该节点的右子树(只需在递归调用中返回它的右子树就可以了)。此时已经没有任何链接指向要被删除的节点了，因此它会被垃圾回收期清除掉。然后我们需要在删除节点后正确的设置它父节点的链接，并更新它到根节点的路径上所有节点的计数器的值。deleteMax()实现方法类似。</p>
+<h5 id="根据key值删除任意节点"><a href="#根据key值删除任意节点" class="headerlink" title="根据key值删除任意节点"></a>根据key值删除任意节点</h5><p>我们可以用类似的方式删除任意一个只有一个子节点(或没有子节点)的节点，但是怎样删除一个拥有两个子节点的节点呢？删除之后我们要处理两颗子树，但是被删除的节点的父节点只有一条被空出来的链接。 为了解决这个难题我们可以在删除节点x后用它的后继节点填补它的位置。因为x有一个右子节点，因此它的后继节点就是其右子子树中最小的节点。这样的替换仍能保证原二叉树的有序性，因为x.key和它的后继节点之间不存在其它的键。总结下来我们可以用4个简单步骤完成将x替换为它的后继节点的操作。</p>
+<ul>
+<li>将指向即将被删除的节点的链接保存为t</li>
+<li>将x指向它的后继节点min(t.right)</li>
+<li>将x的右链接（原本指向一颗所有节点都大于x.key的二叉查找树）指向deleteMin(t.right),也就是删除后所有节点仍然都大于x.key的子二叉查找树。</li>
+<li>将x的左链接(本来为空)指向t.left(其下所有的键都小于被删除的节点和它的后继节点)</li>
+</ul>
+<hr>
+<pre><code>public void delete(Key key) {
+    root=delete(root,key);
+}
+
+private Node delete(Node x,Key key){
+    int cmp=key.compareTo(x.key);
+    if(cmp &lt; 0)
+        x.left=delete(x.left,key);
+    else if(cmp &gt; 0)
+        x.right=delete(x.right,key);
+    else{
+        if(x.right == null) return x.left;
+        if(x.left == null) return x.right;
+        Node t = x;
+        x = min(x.left);
+        x.right=deleteMin(t.right);
+        x.left=t.left;
+    }
+    x.N = size(x.left) + size(x.right) + 1;
+    return x;
+}
+</code></pre><h4 id="范围查找"><a href="#范围查找" class="headerlink" title="范围查找"></a>范围查找</h4><p>要实现范围查找我们首先需要知道遍历二叉树的方法，这里我们使用中序遍历(LDR)，即先左，再根节，后右。即先打印出根节点左子树的所有节点(根据二叉查找树的定义它们应该都小于根节点)，然后打印出根节点的键，最后打印出根节点右子树中的键(同理它们都大于根节点)。</p>
+<pre><code>private void print(Node x){
+    if(x == null)
+        return;
+    print(x.left);
+    System.out.println(x.key);
+    print(x.right);
+}
+</code></pre><p>而要实现接受两个参数并能够将给定范围内的键返回给用例的key()方法，我们可以基于以上代码实现。<br>将所有落在两个参数之间的节点加入一个set就可以了。</p>
+<pre><code>public Iterable&lt;Key&gt; keys(Key lo,Key hi) {
+    Set set=new HashSet&lt;Key&gt;();
+    keys(root,set,lo,hi);
+    return set;
+}
+private void keys(Node x,Set&lt;Key&gt; set,Key lo,Key hi){
+    if(x == null)
+        return;
+    int cmplo=lo.compareTo(x.key);
+    int cmphi=hi.compareTo(x.key);
+
+    keys(x.left,set,lo,hi);
+    if(cmplo &gt;= 0 &amp;&amp;  cmphi &lt;= 0)
+        set.add(x.key);
+    keys(x.right,set,lo,hi);
+}
+</code></pre><h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code>public class BST&lt;Key extends Comparable&lt;Key&gt;, Value&gt; implements ST&lt;Key, Value&gt; {
+    private class Node{
+        private Key key;
+        private Value value;
+        private Node left;
+        private Node right;
+        private int N; //以该节点为根的子树的节点总数
+        public Node(Key key, Value value, int n) {
+            this.key = key;
+            this.value = value;
+            N = n;
+        }   
+    }
+    private Node root;
+    @Override
+    public void put(Key key, Value value) {
+        root=put(root,key,value);
+    }
+    public Node put(Node x,Key key,Value value){
+        if(x == null){
+            return new Node(key, value, 1);
+        }
+        int cmp=key.compareTo(x.key);
+        if(cmp &lt; 0){ //左侧寻找
+            x.left=put(x.left,key,value);
+        }else if(cmp &gt; 0){//右侧寻找
+            x.right=put(x.right,key,value);
+        }
+        //key已经存在
+        x.value=value;
+        x.N=size(x.left)+size(x.right)+1;
+        return x;
+    }
+    @Override
+    public Value get(Key key) {
+        return get(root,key);
+    }
+    public Value get(Node x,Key key) {
+        if(x == null){
+            return null;
+        }
+        int cmp=key.compareTo(x.key);
+        if(cmp &lt; 0){ //左侧寻找
+            return get(x.left,key);
+        }else if(cmp &gt; 0){//右侧寻找
+            return get(x.right,key);
+        }
+        return x.value;
+    }
+    public Key min(){
+        return min(root).key;
+    }
+    private Node min(Node x){
+        if(x.left == null)
+            return x;
+        return min(x.left);
+    }
+
+    public Key floor(Key key){
+
+        Node x=floor(root,key);
+        if(x == null) return null;
+        return x.key;
+    }
+    private  Node floor(Node x, Key key){
+        if(x == null) return null;
+        int cmp=key.compareTo(x.key);
+        if(cmp == 0) return x;
+        if(cmp&lt;0) return floor(x.left,key);
+        Node t = floor(x.right,key);
+        if(t != null) return t;
+        else return x;
+    }
+    public Key select(int k){
+        if(k&lt;=0)
+            return null;
+        return select(root,k).key;
+    }
+    private Node select(Node x,int k){
+        if(x == null) return null;
+        int t = size(x.left);
+        if(t &gt; k){
+            return select(x.left,k);
+        }
+        if(t &lt; k){
+            return select(x.right,k - t - 1);
+        }
+        return x;
+    }
+
+    public void deleteMin(){
+        if(root == null)
+            return ;
+        root = deleteMin(root);
+    }
+    private Node deleteMin(Node x){
+        if(x.left == null)
+            return x.right;
+        x = deleteMin(x.left);
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+    @Override
+    public void delete(Key key) {
+        root=delete(root,key);
+    }
+
+    private Node delete(Node x,Key key){
+        int cmp=key.compareTo(x.key);
+        if(cmp &lt; 0)
+            x.left=delete(x.left,key);
+        else if(cmp &gt; 0)
+            x.right=delete(x.right,key);
+        else{
+            //找到了被删除的节点 现在需要寻找 此节点的后继节点来代替她
+            if(x.right == null) return x.left;
+            if(x.left == null) return x.right;
+            Node t = x;
+            x = min(x.left);
+            x.right=deleteMin(t.right);
+            x.left=t.left;
+        }
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+    private void print(Node x){
+        if(x == null)
+            return;
+        print(x.left);
+        System.out.println(x.key);
+        print(x.right);
+    }
+    @Override
+    public boolean contains(Key key) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size(root);
+    }
+    public int size(Node x){
+        //定义空节点的子节点长度为0
+        if(x == null)
+            return 0;
+        return x.N;
+    }
+    @Override
+    public Iterable&lt;Key&gt; keys(Key lo,Key hi) {
+        Set set=new HashSet&lt;Key&gt;();
+        keys(root,set,lo,hi);
+        return set;
+    }
+    private void keys(Node x,Set&lt;Key&gt; set,Key lo,Key hi){
+        if(x == null)
+            return;
+        int cmplo=lo.compareTo(x.key);
+        int cmphi=hi.compareTo(x.key);
+
+        keys(x.left,set,lo,hi);
+        if(cmplo &gt;= 0 &amp;&amp;  cmphi &lt;= 0)
+            set.add(x.key);
+        keys(x.right,set,lo,hi);
+    }
+}    
+</code></pre><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>要分析二叉查找树的性能我们要引入 <strong>树的高度</strong> 的概念,即树中任意节点的最大深度。而在二叉查找树中我们所有的操作都是沿着树的一条或者两条路径进行的，根据定义路径的长度不可能大于树的高度。所以我二叉查找树中，所有的操作在最坏情况下所需操作的时间都和树的高度成正比。<br>而对给定的N个元素，所构造树高度最低的情况就是一颗平衡二叉树，最坏情况就是所有节点都在一边(也就是一条链表)。因此二叉查找树最好的情况查找和插入都是只需要O(lgn)的复杂度。在最坏情况下则依旧需要O(N)的复杂度。<br>可见，如果我们的数据结构可以构建一颗平衡二叉树就显得尤为重要了，而这样的数据结构就是接下来要说的 <strong>2-3树</strong>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
+          
+            <a href="/tags/Data-Structuer/" rel="tag"># Data Structuer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/03/Arrays-asList/" rel="next" title="Arrays.asList">
+                <i class="fa fa-chevron-left"></i> Arrays.asList
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/13/红黑树/" rel="prev" title="红黑树">
+                红黑树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars1.githubusercontent.com/u/8847544?v=4&u=cc410eadf9016d470eca383a1e893d0222d26bf6&s=400" alt="Doodlister">
+          <p class="site-author-name" itemprop="name">Doodlister</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/doodlister" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#符号表"><span class="nav-number">1.</span> <span class="nav-text">符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API设计"><span class="nav-number">1.2.</span> <span class="nav-text">API设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于无序链表的顺序查找表的实现"><span class="nav-number">1.3.</span> <span class="nav-text">基于无序链表的顺序查找表的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于有序数组的二分查找"><span class="nav-number">1.4.</span> <span class="nav-text">基于有序数组的二分查找</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">1.4.1.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于二叉查找树的符号表"><span class="nav-number">1.5.</span> <span class="nav-text">基于二叉查找树的符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二叉查找树"><span class="nav-number">1.5.1.</span> <span class="nav-text">二叉查找树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">1.5.2.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最大键和最小键"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">最大键和最小键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#向上取整和向下取整"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">向上取整和向下取整</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择操作"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">选择操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除操作"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">删除操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#删除最大键和最小键"><span class="nav-number">1.5.2.4.1.</span> <span class="nav-text">删除最大键和最小键</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#根据key值删除任意节点"><span class="nav-number">1.5.2.4.2.</span> <span class="nav-text">根据key值删除任意节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#范围查找"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">范围查找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现-1"><span class="nav-number">1.5.3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.5.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Doodlister</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
